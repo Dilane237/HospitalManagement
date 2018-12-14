@@ -1,0 +1,317 @@
+
+
+entity Utilisateur {
+	id Long,
+    uid String,
+    nom String,
+    prenom String,
+    email String,
+    login String,
+    cni String,
+    telephone String,
+    createdAt Instant,
+    updatedAt Instant,
+    deletedAt Instant
+}
+
+entity EtatUtilisateur {
+	id Long,
+	actif Boolean,
+    bloquer Boolean,
+    password String,
+    createdAt Instant,
+    updatedAt Instant
+}
+
+entity Compte {
+	id Long,
+	nom String,
+    description String,
+	solde BigDecimal,
+    createdAt Instant,
+    updatedAt Instant,
+    deletedAt Instant
+}
+
+entity EtatCompte {
+	id Long,
+	actif Boolean,
+    bloquer Boolean,
+    codePin Integer,
+    createdAt Instant,
+    updatedAt Instant
+}
+
+entity Organisation {
+	id Long,
+	nom String,
+    description String,
+    createdAt Instant,
+    updatedAt Instant,
+    deletedAt Instant
+}
+
+entity Role {
+	id Long,
+	nom String,
+	describtion String,
+    createdAt Instant,
+    updatedAt Instant,
+    deletedAt Instant
+}
+
+entity Contexte {
+	id Long,
+    type String,
+    startTime Instant,
+	endTime Instant,
+    createdAt Instant,
+    updatedAt Instant,
+    deletedAt Instant
+}
+
+entity Vue {
+	id Long,
+	nom String,
+	description String,
+    url String,
+    createdAt Instant,
+    updatedAt Instant,
+    deletedAt Instant
+}
+
+entity Objet {
+	id Long,
+	nom String,
+    type String,
+    description String,
+    createdAt Instant,
+    updatedAt Instant,
+    deletedAt Instant
+}
+
+entity Action {
+	id Long,
+	nom String,
+    description String,
+    createdAt Instant,
+    updatedAt Instant,
+    deletedAt Instant
+}
+
+entity Activite {
+	id Long,
+	nom String,
+    description String,
+    createdAt Instant,
+    updatedAt Instant,
+    deletedAt Instant
+}
+
+entity Permission {
+	id Long,
+    nom String,
+    niveau Integer,
+    description String,
+    createdAt Instant,
+    updatedAt Instant,
+    deletedAt Instant
+}
+
+entity Consider {
+	id Long,
+    description String,
+    createdAt Instant,
+    updatedAt Instant,
+    deletedAt Instant
+}
+
+entity Utiliser {
+	id Long,
+   description String,
+   createdAt Instant,
+    updatedAt Instant,
+    deletedAt Instant
+}
+
+entity Employer {
+ 	id Long,
+    description String,
+    createdAt Instant,
+    updatedAt Instant,
+    deletedAt Instant
+}
+
+entity Definir {
+	id Long,
+    description String,
+    createdAt Instant,
+    updatedAt Instant,
+    deletedAt Instant
+}
+
+entity Transaction {
+	id Long,
+    typeTransaction Integer,
+    statut String,
+	montant BigDecimal,
+    soldeEmmeteurAvant BigDecimal,
+    soldeEmmeteurApres BigDecimal,
+    soldeDestinataireAvant BigDecimal,
+    soldeDestinataireApres BigDecimal,
+    createdAt Instant,
+    updatedAt Instant,
+    deletedAt Instant,
+    reference String,
+    messageNotification String
+}
+
+entity HistoriqueSolde {
+	id Long,
+    montant BigDecimal,
+    typeOperation String,
+    soldeAvant BigDecimal,
+    soldeApres BigDecimal,
+    motif String,
+    createdAt Instant,
+    updatedAt Instant,
+    deletedAt Instant
+}
+
+entity CommissionFrais {
+	id Long,
+	commission BigDecimal,
+    frais BigDecimal,
+    createdAt Instant,
+    updatedAt Instant,
+    deletedAt Instant
+}
+
+entity Plage {
+	id Long,
+    montantMin BigDecimal,
+    montantMax BigDecimal,
+    createdAt Instant,
+    updatedAt Instant,
+    deletedAt Instant
+}
+
+entity RegleCalculFraisCommission {
+	id Long,
+    typeTransaction Integer,
+    valeurFrais BigDecimal,
+    natureFrais Boolean,
+    valeurCommission BigDecimal,
+    natureCommission Boolean,
+    valeurFraisParent BigDecimal,
+    natureFraisParent Boolean,
+    valeurCommissionParent BigDecimal,
+    natureCommissionParent Boolean,
+    createdAt Instant,
+    updatedAt Instant,
+    deletedAt Instant
+}
+
+
+enum Language {
+  FRENCH, ENGLISH
+}
+
+relationship OneToOne {
+	Compte{utilisateur} to Utilisateur{compte}
+}
+
+relationship OneToOne {
+   EtatUtilisateur{utilisateur} to Utilisateur
+}
+
+relationship OneToMany {
+	Compte{compte} to Compte{compte}
+}
+
+relationship OneToOne {
+   EtatCompte{compte} to Compte
+}
+
+relationship ManyToOne {
+  Transaction{compte} to Compte
+}
+
+relationship ManyToOne {
+  Transaction{compte} to Compte
+}
+
+relationship ManyToOne {
+  HistoriqueSolde{compte} to Compte
+}
+
+relationship ManyToOne {
+  CommissionFrais{transaction} to Transaction
+}
+
+relationship ManyToOne {
+  CommissionFrais{compte} to Compte
+}
+
+relationship ManyToOne {
+  RegleCalculFraisCommission{compte} to Compte
+}
+
+relationship ManyToOne {
+  CommissionFrais{regleCalculFraisCommission} to RegleCalculFraisCommission
+}
+
+relationship ManyToOne {
+  RegleCalculFraisCommission{plage} to Plage
+}
+
+relationship OneToMany {
+    Organisation{permission} to Permission{organisation}
+    Organisation{consider} to Consider{organisation}
+    Organisation{employer} to Employer{organisation}
+    Organisation{definir} to Definir{organisation}
+    Organisation{utiliser} to Utiliser{organisation}
+}
+
+relationship OneToMany {
+	Utilisateur{employer} to Employer{utilisateur}
+    Utilisateur{definir} to Definir{utilisateur}
+}
+   
+relationship OneToMany {
+    Role{employer} to Employer{role}
+    Role{permission} to Permission{role}
+}
+
+relationship OneToMany {
+	Objet{utiliser} to Utiliser{objet}
+}
+
+relationship OneToMany {
+	Contexte{permission} to Permission{contexte}
+    Contexte{definir} to Definir{contexte}
+}
+
+relationship OneToMany {
+	Activite{consider} to Consider{activite}
+    Activite{permission} to Permission{activite}
+}
+
+relationship OneToMany {
+	Action{consider} to Consider{action}
+    Action{definir} to Definir{action}
+}
+
+relationship OneToMany {
+	Vue{permission} to Permission{vue}
+    Vue{utiliser} to Utiliser{vue}
+}
+
+// Set pagination options 
+// paginate * with infinite-scroll
+
+//Use Data Transfert Objects (DTO)
+dto * with mapstruct 
+
+// Set service options to all except few
+service all with serviceImpl
